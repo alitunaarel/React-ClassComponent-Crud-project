@@ -4,7 +4,7 @@ import MovieList from './MovieList'
 import AddMovie from './AddMovie'
 import EditMovie from './EditMovie'
 import axios from "axios"
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 
 
@@ -22,8 +22,12 @@ class App extends React.Component {
     // }
 
     async componentDidMount() {
+        this.getMovies();
+    }
+    async getMovies() {
         const response = await axios.get("http://localhost:3002/movies");
         this.setState({ movies: response.data })
+
     }
     //Fetch Api
 
@@ -83,6 +87,12 @@ class App extends React.Component {
         }))
     }
 
+    //Edit MOVIE∑
+    editMovie = async (id, updatedMovie) => {
+        await axios.put(`http://localhost:3002/movies/${id} `, updatedMovie)
+        this.getMovies();
+    }
+
     render() {
         let filteredMovies = this.state.movies.filter(
             (movie) => movie.name.toLowerCase().includes(this.state.searchQuery.toLowerCase())
@@ -122,8 +132,24 @@ class App extends React.Component {
                             </>
                         )}>
                         </Route>
-                        <Route path="/edit/:id" component={EditMovie}>
+
+                        <Route path="/edit/:id" render={(props) => (
+                            <>
+                                <EditMovie
+                                    {...props}
+                                    onEditMovie={(id, movie) => {
+                                        this.editMovie(id, movie)
+
+                                    }
+                                    }
+
+                                />
+
+                            </>
+                        )}>
                         </Route>
+
+
 
                     </Switch>
                 </div>

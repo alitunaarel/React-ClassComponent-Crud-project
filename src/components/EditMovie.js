@@ -26,11 +26,32 @@ class EditMovie extends React.Component {
         })
     }
     onInputChange = (e) => {
+        //console.log(e.target.name)
+        //console.log(e.target.value)
+        this.setState({
+            [e.target.name]: e.target.value
+        })
 
     }
 
     handleFormSubmit = (e) => {
         e.preventDefault();
+
+        /*         const name = this.state.name;
+                const rating = this.state.rating;
+                const overview = this.state.overview;
+                const imgURL = this.state.imageURL; */
+        const { name, rating, overview, imageURL } = this.state;
+        const id = this.props.match.params.id;
+
+        const updatedMovie = {
+            name: name,
+            rating: rating,
+            overview: overview,
+            imageURL: imageURL
+        }
+        this.props.onEditMovie(id, updatedMovie);
+        this.props.history.push('/')
 
     }
 
@@ -82,7 +103,7 @@ class EditMovie extends React.Component {
                                     rows="5"></textarea>
                             </div>
                         </div>
-                        <input type="submit" className="btn btn-danger btn-block" value="Add Movie" />
+                        <input type="submit" className="btn btn-danger btn-block" value="Edit Movie" />
                     </form>
                 </div>
             </div>
